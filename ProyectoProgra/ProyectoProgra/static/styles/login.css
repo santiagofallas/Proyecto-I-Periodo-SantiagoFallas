@@ -1,0 +1,347 @@
+  /* -----------------------------------------------------
+           RESET Y FUENTES LOCALES (sin Google Fonts, todo sistema)
+        ----------------------------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Usamos fuentes del sistema: para etiquetas serif usamos Georgia / Times, 
+           para el resto Inter alternativa con system-ui */
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #0a2b3e;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Tipografía serif local para etiquetas (estilo Slab/Serif pesado) */
+        .serif-label {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        /* ========= LAYOUT PRINCIPAL SPLIT SCREEN ========= */
+        .split-layout {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ========= LADO IZQUIERDO: gris claro + BORDE INFERIOR DERECHA MUY REDONDEADO ========= */
+        .left-panel-curved {
+            flex: 1;
+            background-color: #2D5276;   /* gris muy claro, casi blanco */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            /* CLAVE: borde inferior derecho masivo para transición suave hacia el lado azul */
+            border-bottom-right-radius: 150px;
+            box-shadow: 8px 0 30px rgba(0, 0, 0, 0.03);
+            z-index: 2;
+        }
+
+        /* Contenedor del formulario centrado */
+        .login-form-container {
+            width: 70%;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        /* ----- Logo con tres círculos superpuestos (naranja, amarillo, verde) ----- */
+        .app-icon-logo {
+            background: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            box-shadow: 0 12px 22px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            transition: transform 0.2s ease;
+        }
+        .circles-stack {
+            position: relative;
+            width: 48px;
+            height: 48px;
+        }
+        .circle {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .circle-orange {
+            background: #f39c12;
+            top: 0;
+            left: 0;
+            z-index: 3;
+        }
+        .circle-yellow {
+            background: #f1c40f;
+            top: 10px;
+            left: 14px;
+            z-index: 2;
+        }
+        .circle-green {
+            background: #2ecc71;
+            top: 20px;
+            left: 6px;
+            z-index: 1;
+        }
+
+        /* ----- Etiquetas (Usuario / Contraseña) estilo Serif, azul oscuro ----- */
+        .input-label-serif {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #1a3f5c;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* Inputs blancos, rectangulares, bordes suaves */
+        .input-modern {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background-color: #ffffff;
+            border: 1px solid #e2e9f2;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #1f2f3e;
+            transition: all 0.2s;
+            outline: none;
+        }
+        .input-modern:focus {
+            border-color: #2c6e9e;
+            box-shadow: 0 0 0 3px rgba(44, 110, 158, 0.1);
+        }
+        .input-modern::placeholder {
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Botón azul oscuro, texto blanco grueso */
+        .btn-login-darkblue {
+            width: 100%;
+            background: #103a5e;
+            border: none;
+            padding: 0.9rem;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: white;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-top: 0.5rem;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 18px rgba(16, 58, 94, 0.15);
+        }
+        .btn-login-darkblue:hover {
+            background: #0b2c48;
+            transform: translateY(-2px);
+        }
+
+        /* ========= LADO DERECHO: azul petróleo oscuro ========= */
+        .right-panel-dark {
+            flex: 1;
+            background: #0b2f46;   /* azul petróleo oscuro */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        /* ----- Pestañas flotantes (Registrarse / Iniciar Sesion) ----- */
+        .nav-tabs-float {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            background: transparent;
+            z-index: 20;
+        }
+        .tab-item {
+            padding: 0.6rem 1.4rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #bdd4e8;
+            border-radius: 40px;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: transparent;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        /* Pestaña activa: Iniciar Sesion con forma de cápsula, color más claro que fondo */
+        .tab-active {
+            background: #1f5779;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* ----- Área de ilustración: monitor + iconos 3D flotantes (sin imagenes externas, solo CSS/iconos) ----- */
+        .illustration-area {
+            text-align: center;
+            max-width: 550px;
+            width: 85%;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        /* Monitor / computadora central */
+        .monitor-frame {
+            background: #1f3b4c;
+            border-radius: 28px 28px 18px 18px;
+            padding: 1rem 1.2rem 1.2rem 1.2rem;
+            box-shadow: 0 25px 35px -10px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 5;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255,255,240,0.15);
+        }
+        .monitor-screen {
+            background: #eef2fa;
+            border-radius: 18px;
+            padding: 1.2rem;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at 20% 30%, rgba(0,0,0,0.02) 2%, transparent 2.5%);
+            background-size: 18px 18px;
+            color: #1e4663;
+        }
+        .monitor-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+        .monitor-screen span {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Iconos flotantes (creados con pseudo-elementos? usamos divs con iconos dibujados con CSS puro + emojis/unicode)
+           Como no tenemos Font Awesome, usaremos caractéres Unicode y simbolos para representar los elementos: 
+           calendario, reloj, engranaje, carpeta, etc. Esto mantiene el estilo completamente local.
+           Cada ícono flotante es un recuadro con sombra y un símbolo.
+        */
+        .floating-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .float-icon {
+            position: absolute;
+            background: rgba(255,255,245,0.95);
+            backdrop-filter: blur(4px);
+            border-radius: 20px;
+            padding: 0.7rem;
+            box-shadow: 0 18px 28px -8px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,200,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #174b6b;
+            transition: transform 0.2s ease;
+            animation: floatSoft 4s infinite alternate ease-in-out;
+        }
+        /* Posiciones específicas para imitar la ilustración compleja */
+        .float-icon-1 { top: -5%; left: -8%; transform: rotate(-8deg); animation-duration: 3.2s; }
+        .float-icon-2 { top: 20%; right: -12%; transform: rotate(5deg); animation-duration: 4s; }
+        .float-icon-3 { bottom: 10%; left: -6%; transform: rotate(-3deg); animation-duration: 3.5s; }
+        .float-icon-4 { bottom: 30%; right: -5%; transform: rotate(12deg); animation-duration: 4.5s; }
+        .float-icon-5 { top: 45%; left: -10%; animation-duration: 3s; }
+        .float-icon-6 { bottom: -5%; right: 15%; animation-duration: 5s; }
+        .float-icon-7 { top: 65%; right: -8%; animation-duration: 3.8s; }
+
+        @keyframes floatSoft {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-12px) rotate(2deg); }
+        }
+
+        .illustration-caption {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #afc9e0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Mensaje de feedback (totalmente local) */
+        .feedback-msg {
+            margin-top: 1.2rem;
+            background: #eef2fa;
+            border-radius: 12px;
+            padding: 0.6rem;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #103a5e;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .split-layout {
+                flex-direction: column;
+                height: auto;
+            }
+            .left-panel-curved {
+                border-bottom-right-radius: 80px;
+                padding: 3rem 1.5rem;
+            }
+            .right-panel-dark {
+                padding: 3rem 1.5rem;
+            }
+            .nav-tabs-float {
+                position: relative;
+                top: 0;
+                right: auto;
+                justify-content: center;
+                margin-bottom: 2rem;
+            }
+            .floating-icons {
+                transform: scale(0.8);
+            }
+            .illustration-area {
+                margin-top: 2rem;
+            }
+        }
+        @media (max-width: 550px) {
+            .left-panel-curved {
+                border-bottom-right-radius: 50px;
+            }
+            .float-icon {
+                transform: scale(0.7);
+            }
+        }
+        .register-click {
+            cursor: pointer;
+        }

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Contactos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/principal.css') }}">
+
+</head>
+<body>
+    <button class="btn menu-toggle" id="menuToggle">
+        <i class="bi bi-list"></i> Menú
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="header-container">
+            <img src="static/images/Logo.png" alt="Logo" class="app-logo" 
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=Logo'">
+            <h5 class="app-title">Gestion de Contactos</h5>
+        </div>
+        <div class="user-info">
+            <i class="bi bi-person-circle"></i> {{ usuario }}
+        </div>
+        <hr>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="#" id="btnListaContactos">
+                <i class="bi bi-list-ul"></i> Lista de Contactos
+            </a>
+            <a class="nav-link" href="#" id="btnAgregarContacto">
+                <i class="bi bi-person-plus"></i> Agregar Contacto
+            </a>
+            <a class="nav-link" href="#" id="btnBuscarContacto">
+                <i class="bi bi-search"></i> Buscar Contacto
+            </a>
+            <hr>
+            <a class="nav-link" href="#" id="btnDescargarReporte">
+                <i class="bi bi-download"></i> Descargar Reporte
+            </a>
+            <a class="nav-link" href="/logout" id="btnSalir">
+                <i class="bi bi-box-arrow-right"></i> Salir
+            </a>
+        </nav>
+    </div>
+
+    <div class="content">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Cargando...</p>
+        </div>
+
+        <!-- Lista de Contactos -->
+        <div id="listaContactosSection">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="bi bi-telephone"></i> Lista de Contactos</h3>
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Favorito</th>
+                                    <th>Nombre</th>
+                                    <th>Empresa</th>
+                                    <th>Telefono</th>
+                                    <th>Email</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contactsTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div id="paginationInfo"></div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary" id="prevPageBtn" disabled>Anterior</button>
+                            <button class="btn btn-sm btn-outline-secondary" id="nextPageBtn" disabled>Siguiente</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agregar Contacto -->
+        <div id="agregarContactoSection" style="display: none;">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="bi bi-person-plus"></i> Agregar Nuevo Contacto</h3>
+                    <form id="contactForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre *</label>
+                                <input type="text" class="form-control" id="nombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Apellido *</label>
+                                <input type="text" class="form-control" id="apellido" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Empresa</label>
+                                <input type="text" class="form-control" id="empresa">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Cargo</label>
+                                <input type="text" class="form-control" id="cargo">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Correo electronico *</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Telefono *</label>
+                                <input type="tel" class="form-control" id="telefono" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Direccion</label>
+                                <input type="text" class="form-control" id="direccion">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha de cumpleanos</label>
+                                <input type="date" class="form-control" id="cumpleanos">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notas</label>
+                            <textarea class="form-control" id="notas" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <select class="form-select" id="estado">
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom">Guardar Contacto</button>
+                        <button type="button" class="btn btn-secondary" id="cancelarAgregar">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buscar Contacto -->
+        <div id="buscarContactoSection" style="display: none;">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="bi bi-search"></i> Buscar Contactos</h3>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="buscarNombre" placeholder="Ingrese el nombre">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Empresa</label>
+                            <input type="text" class="form-control" id="buscarEmpresa" placeholder="Ingrese la empresa">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Favoritos</label>
+                            <select class="form-select" id="buscarFavorito">
+                                <option value="">Todos</option>
+                                <option value="true">Solo favoritos</option>
+                                <option value="false">No favoritos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary-custom" id="btnBuscar">Buscar</button>
+                    <div id="resultadoBusqueda" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE DETALLES DEL USUARIO (como en la imagen) -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-person-badge"></i> Detalles del Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="deleteFromDetailsBtn">Eliminar contacto</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACION (como en la imagen) -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center py-4">
+                    <div class="confirmation-modal-icon">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <h5 class="mb-3">¿Esta seguro de que quiere realizar esta accion?</h5>
+                    <p id="deleteConfirmMessage"></p>
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/principal.js') }}"></script>
+
+</body>
+</html>

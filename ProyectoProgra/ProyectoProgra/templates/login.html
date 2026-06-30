@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Split Screen Login | Diseño Completo sin librerías externas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+</head>
+<body>
+<div class="split-layout">
+    <!-- LADO IZQUIERDO: fondo gris claro + borde inferior derecho redondeado + formulario -->
+    <div class="left-panel-curved">
+        <div class="login-form-container">
+            <!-- Logo con círculos superpuestos (estilo ícono de app) -->
+            <div class="app-icon-logo">
+                <div class="circles-stack">
+                    <div class="circle circle-orange"></div>
+                    <div class="circle circle-yellow"></div>
+                    <div class="circle circle-green"></div>
+                </div>
+            </div>
+
+            <!-- Formulario de login: CONEXIÓN CON FLASK -->
+            <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+                <div class="form-group">
+                    <label class="input-label-serif">Usuario</label>
+                    <input type="text" id="usernameInput" name="User" class="input-modern" placeholder="ejemplo@correo.com" value="Ejemplo@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label class="input-label-serif">Contraseña</label>
+                    <input type="password" id="passwordInput" name="Passw" class="input-modern" placeholder="********" value="12345678">
+                </div>
+                <button type="submit" class="btn-login-darkblue">
+                    <span>🔐</span> Iniciar Sesion
+                </button>
+            </form>
+            <div id="feedbackMessage" class="feedback-msg"></div>
+        </div>
+    </div>
+
+    <!-- LADO DERECHO: azul petróleo + pestañas flotantes + ilustración con monitor e iconos 3D (locales) -->
+    <div class="right-panel-dark">
+        <!-- Pestañas de navegación: Registrarse e Iniciar Sesion (pill activa) -->
+        <div class="nav-tabs-float">
+            <div id="registerTab" class="tab-item register-click">Registrarse</div>
+            <div id="loginTabActive" class="tab-item tab-active">Iniciar Sesion</div>
+        </div>
+
+        <!-- Área de ilustración: monitor + íconos flotantes representados con símbolos unicode / emojis -->
+        <div class="illustration-area">
+            <!-- Monitor central (computadora) -->
+            <div class="monitor-frame">
+                <div class="monitor-screen">
+                    <div class="monitor-icon">💻✨</div>
+                    <span>Conecta tu mundo</span>
+                    <div style="font-size:0.65rem; margin-top:0.5rem;">🔒 seguro y dinámico</div>
+                </div>
+            </div>
+
+            <!-- Iconos flotantes estilo 3D -->
+            <div class="floating-icons">
+                <div class="float-icon float-icon-1">📅</div>
+                <div class="float-icon float-icon-2">⏰</div>
+                <div class="float-icon float-icon-3">⚙️</div>
+                <div class="float-icon float-icon-4">📁</div>
+                <div class="float-icon float-icon-5">📊</div>
+                <div class="float-icon float-icon-6">✉️</div>
+                <div class="float-icon float-icon-7">📱</div>
+            </div>
+            <div class="illustration-caption">
+                🛡️ ecosistema integrado · productividad fluida
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // -------------------------------------------------------------
+    // CONEXIÓN CON FLASK - Envío del formulario mediante fetch
+    // -------------------------------------------------------------
+    const loginFormElem = document.getElementById('loginForm');
+    const usernameField = document.getElementById('usernameInput');
+    const pwdField = document.getElementById('passwordInput');
+    const feedbackDiv = document.getElementById('feedbackMessage');
+    const registerTabElem = document.getElementById('registerTab');
+    const loginTabElem = document.getElementById('loginTabActive');
+
+    function showFeedback(msg, isError = false, isSuccess = false) {
+        feedbackDiv.style.display = 'block';
+        feedbackDiv.textContent = msg;
+        feedbackDiv.style.backgroundColor = isError ? '#ffe6e5' : (isSuccess ? '#e0f2e9' : '#eef2fa');
+        feedbackDiv.style.color = isError ? '#b33' : (isSuccess ? '#1a6e4b' : '#103a5e');
+        setTimeout(() => {
+            feedbackDiv.style.display = 'none';
+        }, 4200);
+    }
+
+    // Envío del formulario a Flask usando fetch (JavaScript moderno)
+    loginFormElem.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Evitar el envío tradicional
+        
+        const emailVal = usernameField.value.trim();
+        const pwdVal = pwdField.value;
+        
+        // Validaciones frontend
+        if (!emailVal) {
+            showFeedback("⚠️ Por favor, ingresa un usuario válido.", true);
+            return;
+        }
+        if (!pwdVal) {
+            showFeedback("⚠️ La contraseña no puede estar vacía.", true);
+            return;
+        }
+        
+        const emailPattern = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+        if (!emailPattern.test(emailVal)) {
+            showFeedback("Formato de correo incorrecto. Ejemplo: usuario@dominio.com", true);
+            return;
+        }
+        
+        // Mostrar mensaje de carga
+        showFeedback("🔐 Verificando credenciales...", false);
+        
+        try {
+            // Enviar datos a Flask
+            const formData = new FormData();
+            formData.append('User', emailVal);
+            formData.append('Passw', pwdVal);
+            
+            const response = await fetch('/', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showFeedback("✅ " + data.message, false, true);
+                // Redirigir después de 1.5 segundos
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 1500);
+            } else {
+                showFeedback("❌ " + data.message, true);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showFeedback("❌ Error de conexión con el servidor", true);
+        }
+    });
+
+    // Simular registro desde la pestaña "Registrarse"
+    registerTabElem.addEventListener('click', () => {
+        const currentEmail = usernameField.value.trim();
+        const currentPwd = pwdField.value;
+        if (!currentEmail) {
+            showFeedback("📧 Para registrarte, ingresa un correo electrónico primero.", true);
+            return;
+        }
+        const emailPattern = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+        if (!emailPattern.test(currentEmail)) {
+            showFeedback("Correo inválido, usa un formato real para el registro.", true);
+            return;
+        }
+        if (!currentPwd || currentPwd.length < 4) {
+            showFeedback("La contraseña debe tener al menos 4 caracteres.", true);
+            return;
+        }
+        
+        // Enviar registro a Flask
+        fetch('/registro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: currentEmail,
+                password: currentPwd
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showFeedback(`🎉 ${data.message}`, false, true);
+            } else {
+                showFeedback(`❌ ${data.message}`, true);
+            }
+        })
+        .catch(error => {
+            showFeedback("❌ Error al registrar usuario", true);
+        });
+    });
+
+    loginTabElem.addEventListener('click', () => {
+        document.querySelector('.login-form-container')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showFeedback("Completa tus credenciales e inicia sesión.", false);
+    });
+</script>
+</body>
+</html>
